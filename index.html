@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Best Friend?</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <style>
+      /* 2. CSS Styling */
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #fdf0f5; /* Nền hồng nhạt */
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        overflow: hidden; /* Quan trọng: Ngăn scrollbar khi nút "No" bay */
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      /* Ẩn màn hình cảm ơn ban đầu */
+      #thank-you-screen {
+        display: none;
+      }
+
+      h1 {
+        font-size: 3rem;
+        color: #d6336c;
+        margin-bottom: 30px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      button {
+        padding: 15px 35px;
+        font-size: 1.5rem;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #yes-btn {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      #no-btn {
+        background-color: #f44336;
+        color: white;
+        /* Thêm transition cho việc thu nhỏ mượt mà */
+        transition: transform 0.3s ease;
+      }
+
+      .thank-you-text {
+        font-size: 4rem;
+        color: #eb4d4b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="question-screen">
+        <h1>Be My Best Friend?</h1>
+        <div class="buttons">
+          <button id="yes-btn">Yes</button>
+          <button id="no-btn">No</button>
+        </div>
+      </div>
+
+      <div id="thank-you-screen">
+        <h1 class="thank-you-text">Thank You! 🥰</h1>
+      </div>
+    </div>
+
+    <script>
+      // 3. JavaScript thuần
+
+      // Chờ cho toàn bộ trang web được tải xong
+      document.addEventListener("DOMContentLoaded", () => {
+        // Lấy các element cần dùng
+        const yesBtn = document.getElementById("yes-btn");
+        const noBtn = document.getElementById("no-btn");
+        const questionScreen = document.getElementById("question-screen");
+        const thankYouScreen = document.getElementById("thank-you-screen");
+
+        // Biến này để theo dõi kích thước của nút "No"
+        let noButtonScale = 1;
+
+        // Xử lý khi nhấn nút "Yes"
+        yesBtn.addEventListener("click", () => {
+          // Ẩn màn hình câu hỏi
+          questionScreen.style.display = "none";
+          // Hiện màn hình cảm ơn
+          thankYouScreen.style.display = "block";
+          // Bắn pháo hoa (hàm confetti() có sẵn do đã import ở <head>)
+          confetti({
+            particleCount: 200,
+            spread: 150,
+            origin: { y: 0.6 },
+          });
+        });
+
+        // Xử lý khi di chuột vào nút "No"
+        noBtn.addEventListener("mouseover", () => {
+          // 1. Thu nhỏ nút
+          noButtonScale = Math.max(noButtonScale * 0.9, 0.1); // Giảm 10%, tối thiểu 10%
+          noBtn.style.transform = `scale(${noButtonScale})`;
+
+          // 2. Di chuyển nút đến vị trí ngẫu nhiên
+          // Phải set 'absolute' để 'top' và 'left' có tác dụng
+          noBtn.style.position = "absolute";
+
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+
+          // Lấy kích thước của nút (để đảm bảo không bay ra ngoài màn hình)
+          const buttonWidth = noBtn.offsetWidth;
+          const buttonHeight = noBtn.offsetHeight;
+
+          const randomTop = Math.random() * (viewportHeight - buttonHeight);
+          const randomLeft = Math.random() * (viewportWidth - buttonWidth);
+
+          noBtn.style.top = `${randomTop}px`;
+          noBtn.style.left = `${randomLeft}px`;
+        });
+      });
+    </script>
+  </body>
+</html>
